@@ -29,9 +29,10 @@
     color:var(--text);
     font-family:'IBM Plex Mono', ui-monospace, monospace;
     min-height:100vh;
-    padding:20px 20px 40px;
-  }
-  .app{ max-width:1180px; margin:0 auto; }
+        padding:20px 12px 40px;
+        overflow-x:hidden;
+      }
+  .app{ width:100%; margin:0; }
 
   /* ---------- header ---------- */
   .wordmark{
@@ -150,28 +151,28 @@
   .panel-head b{ color:#e7ebef; font-size:12px; letter-spacing:0.6px; }
 
   .grid-wrap{
-    max-height:300px; overflow-y:auto; overflow-x:auto;
-    padding-right:4px;
-  }
+      overflow:visible;
+      padding-right:4px;
+    }
   .grid-wrap::-webkit-scrollbar{ width:8px; height:8px; }
   .grid-wrap::-webkit-scrollbar-thumb{ background:#262c35; border-radius:4px; }
   .grid-wrap::-webkit-scrollbar-track{ background:transparent; }
 
   .grid{
-    display:grid;
-    grid-template-columns:repeat(40, minmax(22px,1fr));
-    gap:2px;
-    min-width:760px;
-  }
+      display:grid;
+      grid-template-columns:repeat(40, minmax(0,1fr));
+      gap:2px;
+    }
   .cell{
-    aspect-ratio:1;
-    display:flex; align-items:center; justify-content:center;
-    font-size:8px; color:rgba(255,255,255,0.55);
-    border-radius:2px; cursor:pointer;
-    background:var(--future);
-    border:1px solid rgba(255,255,255,0.03);
-    user-select:none;
-  }
+      aspect-ratio:1;
+      display:flex; align-items:center; justify-content:center;
+      font-size:var(--cell-font, 8px); color:rgba(255,255,255,0.55);
+      border-radius:2px; cursor:pointer;
+      background:var(--future);
+      border:1px solid rgba(255,255,255,0.03);
+      user-select:none;
+      overflow:hidden;
+    }
   .cell.future{ background:var(--future); color:rgba(255,255,255,0.22); }
   .cell.nodata{ background:var(--nodata); color:rgba(255,255,255,0.18);
     background-image:repeating-linear-gradient(135deg, rgba(255,255,255,0.03) 0 3px, transparent 3px 6px); }
@@ -186,8 +187,8 @@
   .cell:hover{ outline:1px solid #fff; }
 
   @media (max-width:700px){
-    .grid{ grid-template-columns:repeat(20, minmax(20px,1fr)); min-width:0; }
-  }
+      .grid{ grid-template-columns:repeat(20, minmax(0,1fr)); }
+    }
 
   /* ---------- tooltip & detail ---------- */
   #tooltip{
@@ -218,7 +219,7 @@
 <div class="app">
 
   <div class="wordmark">SECOND GRID <span class="tag">binance · 1s</span></div>
-  <div class="eyebrow">3,600 one-second candles, boxed and numbered — one hour visible at a time</div>
+  <div class="eyebrow hidden">3,600 one-second candles, boxed and numbered — one hour visible at a time</div>
 
   <div class="controls">
     <span id="liveDot" class="dot"></span>
@@ -243,14 +244,14 @@
     </div>
   </div>
 
-  <div class="progresswrap">
-    <span id="progressText">—</span>
-    <div class="progressbar"><i id="progressFill"></i></div>
-  </div>
+  <div class="progresswrap hidden">
+      <span id="progressText">—</span>
+      <div class="progressbar"><i id="progressFill"></i></div>
+    </div>
 
   <div id="banner" class="banner hidden"></div>
 
-  <div class="legend">
+  <div class="legend hidden">
     <div class="item"><span class="swatch" style="background:var(--up)"></span> up second</div>
     <div class="item"><span class="swatch" style="background:var(--down)"></span> down second</div>
     <div class="item"><span class="swatch" style="background:var(--flat)"></span> flat</div>
@@ -271,7 +272,7 @@
 
   <div id="detail" class="detail hidden"></div>
 
-  <footer>
+  <footer class="hidden">
     Hover a box for a quick read, click one to pin the details panel above. Each box is one second of the
     selected hour; only a full hour (3,600 seconds) is ever shown, never more or less.
     Data source: Binance <code>&lt;symbol&gt;@kline_1s</code> WebSocket for the live hour, and
@@ -502,8 +503,8 @@
     else if(kind==='error'){ txt.textContent='connection error'; }
     else { txt.textContent='offline · retrying…'; }
   }
-  function showBanner(msg){ const b=document.getElementById('banner'); b.textContent=msg; b.classList.remove('hidden'); }
-  function hideBanner(){ document.getElementById('banner').classList.add('hidden'); }
+  function showBanner(msg){ const b=document.getElementById('banner'); b.textContent=msg; b.classList.remove('hidden'); fitGridsToViewport(); }
+    function hideBanner(){ document.getElementById('banner').classList.add('hidden'); fitGridsToViewport(); }
 
   // ---------- nav ----------
   function updateHourLabel(){
@@ -588,8 +589,9 @@
       `;
     }
     detail.innerHTML=bodyHtml;
-    detail.classList.remove('hidden');
-  }
+        detail.classList.remove('hidden');
+        fitGridsToViewport();
+      }
 
   document.addEventListener('mouseover', e=>{ const c=e.target.closest('.cell'); if(c) showTooltip(c,e); });
   document.addEventListener('mousemove', e=>{ if(!tooltip.classList.contains('hidden')) positionTooltip(e); });
@@ -620,15 +622,51 @@
     }
   },1000);
 
-  // ---------- boot ----------
-  buildGrids();
-  updateHourLabel();
-  paintFromCache(state.viewHourStart);
-  loadHistorical(state.viewHourStart, Math.floor((Date.now()-state.viewHourStart)/1000)+1);
-  connectWS();
-  updateNav();
-
-})();
+  // ---------- viewport auto-fit ----------
+    function fitGridsToViewport(){
+      const evenGrid=document.getElementById('evenGrid');
+      const oddGrid=document.getElementById('oddGrid');
+      if(!evenGrid || !oddGrid) return;
+      function apply(cols){
+        const val='repeat('+cols+', minmax(0,1fr))';
+        evenGrid.style.gridTemplateColumns=val;
+        oddGrid.style.gridTemplateColumns=val;
+      }
+      function fits(){
+        return document.documentElement.scrollHeight <= window.innerHeight + 1;
+      }
+      let lo=4, hi=300, fit=hi;
+      apply(hi);
+      if(fits()){
+        while(lo<hi){
+          const mid=Math.floor((lo+hi)/2);
+          apply(mid);
+          if(fits()) hi=mid; else lo=mid+1;
+        }
+        fit=lo;
+      }
+      apply(fit);
+      const cellPx=evenGrid.clientWidth/fit;
+      document.documentElement.style.setProperty('--cell-font', Math.max(4, cellPx*0.34).toFixed(1)+'px');
+    }
+  
+    let fitTimer=null;
+    function scheduleFit(){
+      clearTimeout(fitTimer);
+      fitTimer=setTimeout(fitGridsToViewport, 120);
+    }
+    window.addEventListener('resize', scheduleFit);
+  
+    // ---------- boot ----------
+    buildGrids();
+    updateHourLabel();
+    paintFromCache(state.viewHourStart);
+    loadHistorical(state.viewHourStart, Math.floor((Date.now()-state.viewHourStart)/1000)+1);
+    connectWS();
+    updateNav();
+    fitGridsToViewport();
+  
+  })();
 </script>
 </body>
 </html>
