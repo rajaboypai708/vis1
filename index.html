@@ -24,15 +24,15 @@
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
-      background:
-        radial-gradient(ellipse at top, #10141b 0%, var(--bg) 55%);
-      color:var(--text);
-      font-family:'IBM Plex Mono', ui-monospace, monospace;
-      min-height:100vh;
-          padding:6px 6px 6px;
-          overflow-x:hidden;
-        }
-  .app{ width:100%; margin:0; }
+        background:
+          radial-gradient(ellipse at top, #10141b 0%, var(--bg) 55%);
+        color:var(--text);
+        font-family:'IBM Plex Mono', ui-monospace, monospace;
+        height:100vh;
+            padding:4px;
+            overflow:hidden;
+          }
+    .app{ width:100%; margin:0; height:100%; display:flex; flex-direction:column; }
 
   /* ---------- header ---------- */
   .topbar{
@@ -164,45 +164,54 @@
 
   /* ---------- panels ---------- */
     .panel{
-      margin-top:6px; background:var(--panel);
-      border:1px solid var(--border); border-radius:6px;
-      padding:0; overflow:hidden;
-    }
-    .panel-head{
-      display:flex; align-items:baseline; gap:8px;
-      font-size:10px; color:var(--muted); letter-spacing:0.6px;
-      margin:0; padding:3px 8px; text-transform:uppercase;
-    }
-    .panel-head b{ color:#e7ebef; font-size:10px; letter-spacing:0.6px; }
-  
-    .grid-wrap{
-        overflow:visible;
-        padding:0; margin:0;
-      }
+          margin-top:4px; background:var(--panel);
+          border:1px solid var(--border); border-radius:6px;
+          padding:0; overflow:hidden;
+          flex:1 1 0; min-height:0;
+          display:flex; flex-direction:column;
+        }
+        .panel-head{
+          display:flex; align-items:baseline; gap:8px;
+          font-size:9px; color:var(--muted); letter-spacing:0.6px;
+          margin:0; padding:2px 6px; text-transform:uppercase;
+          flex:0 0 auto;
+        }
+        .panel-head b{ color:#e7ebef; font-size:9px; letter-spacing:0.6px; }
+      
+        .grid-wrap{
+                overflow:hidden;
+                padding:0; margin:0;
+                flex:1 1 0; min-height:0;
+                display:flex;
+              }
+          .grid-wrap::-webkit-scrollbar{ width:0; height:0; }
   .grid-wrap::-webkit-scrollbar{ width:8px; height:8px; }
   .grid-wrap::-webkit-scrollbar-thumb{ background:#262c35; border-radius:4px; }
   .grid-wrap::-webkit-scrollbar-track{ background:transparent; }
 
   .grid{
-        display:grid;
-        grid-template-columns:repeat(40, minmax(0,1fr));
-        grid-auto-rows:var(--row-h, 20px);
-        gap:0;
-        line-height:0;
-      }
-    .cell{
-        display:flex; align-items:center; justify-content:center;
-        font-size:var(--cell-font, 8px); color:rgba(255,255,255,0.55);
-        border-radius:0; cursor:pointer;
-        background:var(--future);
-        border:none;
-        outline:1px solid rgba(255,255,255,0.03);
-        outline-offset:-1px;
-        user-select:none;
-        overflow:hidden;
-        padding:0;
-        white-space:nowrap;
-      }
+            display:grid;
+            grid-template-columns:repeat(var(--grid-cols, 40), minmax(0,1fr));
+            grid-template-rows:repeat(var(--grid-rows, 45), 1fr);
+            gap:0;
+            line-height:0;
+            width:100%;
+            height:100%;
+          }
+      .cell{
+            display:flex; align-items:center; justify-content:center;
+            font-size:var(--cell-font, 8px); color:rgba(255,255,255,0.92);
+            font-weight:600;
+            border-radius:0; cursor:pointer;
+            background:var(--future);
+            border:none;
+            outline:1px solid rgba(255,255,255,0.03);
+            outline-offset:-1px;
+            user-select:none;
+            overflow:hidden;
+            padding:0;
+            white-space:nowrap;
+          }
   .cell.future{ background:var(--future); color:rgba(255,255,255,0.22); }
   .cell.nodata{ background:var(--nodata); color:rgba(255,255,255,0.18);
     background-image:repeating-linear-gradient(135deg, rgba(255,255,255,0.03) 0 3px, transparent 3px 6px); }
@@ -246,9 +255,9 @@
 </style>
 </head>
 <body>
-<div class="app">
+<div class="app" style="flex:0 0 auto;">
 
-  <div class="topbar">
+  <div class="topbar" style="flex:0 0 auto;">
     <div class="wordmark">SECOND GRID <span class="tag">binance · 1s</span></div>
     <div class="eyebrow hidden">3,600 one-second candles, boxed and numbered — one hour visible at a time</div>
   
@@ -707,35 +716,24 @@
 
   // ---------- viewport auto-fit ----------
         function fitGridsToViewport(){
-          const evenGrid=document.getElementById('evenGrid');
-          const oddGrid=document.getElementById('oddGrid');
-          if(!evenGrid || !oddGrid) return;
-          const containerWidth = evenGrid.parentElement.clientWidth || window.innerWidth;
-  
-          function apply(px){
-            const cols=Math.max(6, Math.min(400, Math.floor(containerWidth/px)));
-            const val='repeat('+cols+', minmax(0,1fr))';
-            evenGrid.style.gridTemplateColumns=val;
-            oddGrid.style.gridTemplateColumns=val;
-            document.documentElement.style.setProperty('--row-h', Math.max(3, Math.round(px))+'px');
-          }
-          function fits(){
-            return document.documentElement.scrollHeight <= window.innerHeight + 1;
-          }
-  
-          let lo=3, hi=120, best=3;
-          apply(lo);
-          if(fits()){
-            best=lo;
-            while(lo<=hi){
-              const mid=Math.floor((lo+hi)/2);
-              apply(mid);
-              if(fits()){ best=mid; lo=mid+1; } else { hi=mid-1; }
-            }
-          }
-          apply(best);
-          document.documentElement.style.setProperty('--cell-font', Math.max(6, best*0.42).toFixed(1)+'px');
-        }
+                          const evenGrid=document.getElementById('evenGrid');
+                          const oddGrid=document.getElementById('oddGrid');
+                          if(!evenGrid || !oddGrid) return;
+        
+                          const wrapW = evenGrid.parentElement.clientWidth || window.innerWidth;
+                          const wrapH = evenGrid.parentElement.clientHeight || 200;
+        
+                          let bestCols=40, bestRows=45, bestCell=1;
+                          for(let cols=6; cols<=400; cols++){
+                            const rows=Math.ceil(BOXES_PER_PANEL/cols);
+                            const cellW=wrapW/cols, cellH=wrapH/rows;
+                            const cellSize=Math.min(cellW, cellH);
+                            if(cellSize>bestCell){ bestCell=cellSize; bestCols=cols; bestRows=rows; }
+                          }
+                          document.documentElement.style.setProperty('--grid-cols', bestCols);
+                          document.documentElement.style.setProperty('--grid-rows', bestRows);
+                          document.documentElement.style.setProperty('--cell-font', Math.max(6, bestCell*0.42).toFixed(1)+'px');
+                        }
   
     let fitTimer=null;
     function scheduleFit(){
