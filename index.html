@@ -24,50 +24,56 @@
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
-    background:
-      radial-gradient(ellipse at top, #10141b 0%, var(--bg) 55%);
-    color:var(--text);
-    font-family:'IBM Plex Mono', ui-monospace, monospace;
-    min-height:100vh;
-        padding:20px 12px 40px;
-        overflow-x:hidden;
-      }
+      background:
+        radial-gradient(ellipse at top, #10141b 0%, var(--bg) 55%);
+      color:var(--text);
+      font-family:'IBM Plex Mono', ui-monospace, monospace;
+      min-height:100vh;
+          padding:6px 6px 6px;
+          overflow-x:hidden;
+        }
   .app{ width:100%; margin:0; }
 
   /* ---------- header ---------- */
-  .wordmark{
-    font-family:'Space Grotesk', sans-serif;
-    font-weight:700;
-    font-size:22px;
-    letter-spacing:0.2px;
-    color:#eef1f5;
-    display:flex; align-items:baseline; gap:10px;
-  }
-  .wordmark span.tag{
-    font-family:'IBM Plex Mono', monospace;
-    font-weight:500;
-    font-size:11px;
-    color:var(--muted);
-    letter-spacing:1.5px;
-    text-transform:uppercase;
-    border:1px solid var(--border);
-    padding:2px 7px;
-    border-radius:3px;
-  }
-  .eyebrow{
-    color:var(--muted);
-    font-size:12px;
-    letter-spacing:0.5px;
-    margin-top:4px;
-  }
-
-  .controls{
-    display:flex; flex-wrap:wrap; align-items:center; gap:10px;
-    margin-top:18px; padding:12px 14px;
-    background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:8px;
-  }
+  .topbar{
+      display:flex; flex-wrap:wrap; align-items:center; gap:6px;
+      margin-top:4px;
+    }
+    .wordmark{
+      font-family:'Space Grotesk', sans-serif;
+      font-weight:700;
+      font-size:13px;
+      letter-spacing:0.2px;
+      color:#eef1f5;
+      display:flex; align-items:baseline; gap:6px;
+      flex:0 0 auto;
+    }
+    .wordmark span.tag{
+      font-family:'IBM Plex Mono', monospace;
+      font-weight:500;
+      font-size:9px;
+      color:var(--muted);
+      letter-spacing:1px;
+      text-transform:uppercase;
+      border:1px solid var(--border);
+      padding:1px 5px;
+      border-radius:3px;
+    }
+    .eyebrow{
+      color:var(--muted);
+      font-size:12px;
+      letter-spacing:0.5px;
+      margin-top:4px;
+    }
+  
+    .controls{
+        display:flex; flex-wrap:wrap; align-items:center; gap:6px;
+        margin-top:0; padding:4px 8px;
+        background:var(--panel);
+        border:1px solid var(--border);
+        border-radius:6px;
+        flex:1 1 auto;
+      }
   .dot{
     width:8px; height:8px; border-radius:50%;
     background:var(--muted); flex:0 0 auto;
@@ -136,55 +142,79 @@
   }
   .legend .item{ display:flex; align-items:center; gap:6px; }
   .swatch{ width:11px; height:11px; border-radius:2px; border:1px solid var(--border); }
+  
+    .statsbar{
+            display:flex; flex-wrap:wrap;
+            margin:0; padding:4px 8px;
+            background:var(--panel-2); border:1px solid var(--border);
+            border-radius:6px; font-size:10px; letter-spacing:0.3px;
+            flex:1 1 340px;
+          }
+          .statrow{
+            display:flex; flex-wrap:wrap; align-items:center; gap:8px;
+            padding:1px 8px; flex:1 1 0; min-width:150px;
+          }
+          .statrow:first-child{ border-right:1px solid var(--border); }
+          .statrow .rowlabel{ color:#e7ebef; font-weight:600; font-size:9px; letter-spacing:0.6px; min-width:28px; }
+          .statsbar .stat{ display:flex; align-items:center; gap:4px; color:var(--muted); }
+          .statsbar .stat b{ font-size:11px; font-weight:600; }
+          .statsbar .stat.up b{ color:var(--up); }
+          .statsbar .stat.down b{ color:var(--down); }
+          .statsbar .stat.nodata b{ color:var(--flat); }
 
   /* ---------- panels ---------- */
-  .panel{
-    margin-top:14px; background:var(--panel);
-    border:1px solid var(--border); border-radius:8px;
-    padding:12px 12px 8px;
-  }
-  .panel-head{
-    display:flex; align-items:baseline; gap:8px;
-    font-size:12px; color:var(--muted); letter-spacing:0.6px;
-    margin-bottom:8px; text-transform:uppercase;
-  }
-  .panel-head b{ color:#e7ebef; font-size:12px; letter-spacing:0.6px; }
-
-  .grid-wrap{
-      overflow:visible;
-      padding-right:4px;
+    .panel{
+      margin-top:6px; background:var(--panel);
+      border:1px solid var(--border); border-radius:6px;
+      padding:0; overflow:hidden;
     }
+    .panel-head{
+      display:flex; align-items:baseline; gap:8px;
+      font-size:10px; color:var(--muted); letter-spacing:0.6px;
+      margin:0; padding:3px 8px; text-transform:uppercase;
+    }
+    .panel-head b{ color:#e7ebef; font-size:10px; letter-spacing:0.6px; }
+  
+    .grid-wrap{
+        overflow:visible;
+        padding:0; margin:0;
+      }
   .grid-wrap::-webkit-scrollbar{ width:8px; height:8px; }
   .grid-wrap::-webkit-scrollbar-thumb{ background:#262c35; border-radius:4px; }
   .grid-wrap::-webkit-scrollbar-track{ background:transparent; }
 
   .grid{
-      display:grid;
-      grid-template-columns:repeat(40, minmax(0,1fr));
-      gap:2px;
-    }
-  .cell{
-      aspect-ratio:1;
-      display:flex; align-items:center; justify-content:center;
-      font-size:var(--cell-font, 8px); color:rgba(255,255,255,0.55);
-      border-radius:2px; cursor:pointer;
-      background:var(--future);
-      border:1px solid rgba(255,255,255,0.03);
-      user-select:none;
-      overflow:hidden;
-    }
+        display:grid;
+        grid-template-columns:repeat(40, minmax(0,1fr));
+        grid-auto-rows:var(--row-h, 20px);
+        gap:0;
+        line-height:0;
+      }
+    .cell{
+        display:flex; align-items:center; justify-content:center;
+        font-size:var(--cell-font, 8px); color:rgba(255,255,255,0.55);
+        border-radius:0; cursor:pointer;
+        background:var(--future);
+        border:none;
+        outline:1px solid rgba(255,255,255,0.03);
+        outline-offset:-1px;
+        user-select:none;
+        overflow:hidden;
+        padding:0;
+        white-space:nowrap;
+      }
   .cell.future{ background:var(--future); color:rgba(255,255,255,0.22); }
   .cell.nodata{ background:var(--nodata); color:rgba(255,255,255,0.18);
     background-image:repeating-linear-gradient(135deg, rgba(255,255,255,0.03) 0 3px, transparent 3px 6px); }
-  .cell.up{ background:rgba(38,208,124,0.85); color:#04140c; font-weight:600; }
-  .cell.down{ background:rgba(240,69,94,0.85); color:#1a0407; font-weight:600; }
-  .cell.flat{ background:rgba(122,130,144,0.55); color:#0c0e11; }
+  .cell.up{ background:var(--up); color:#03150c; font-weight:700; }
+    .cell.down{ background:var(--down); color:#1c0508; font-weight:700; }
+    .cell.flat{ background:#4d6a8c; color:#eef3f8; font-weight:700; }
   .cell.live{ box-shadow:0 0 0 2px var(--accent), 0 0 8px 1px rgba(255,180,84,0.7); animation:cursorblink 1s infinite; }
   @keyframes cursorblink{
     0%,100%{ filter:brightness(1); } 50%{ filter:brightness(1.35); }
   }
   @media (prefers-reduced-motion: reduce){ .cell.live{ animation:none; } }
-  .cell:hover{ outline:1px solid #fff; }
+  .cell:hover{ outline:1px solid #fff; outline-offset:-1px; }
 
   @media (max-width:700px){
       .grid{ grid-template-columns:repeat(20, minmax(0,1fr)); }
@@ -218,10 +248,11 @@
 <body>
 <div class="app">
 
-  <div class="wordmark">SECOND GRID <span class="tag">binance · 1s</span></div>
-  <div class="eyebrow hidden">3,600 one-second candles, boxed and numbered — one hour visible at a time</div>
-
-  <div class="controls">
+  <div class="topbar">
+    <div class="wordmark">SECOND GRID <span class="tag">binance · 1s</span></div>
+    <div class="eyebrow hidden">3,600 one-second candles, boxed and numbered — one hour visible at a time</div>
+  
+    <div class="controls">
     <span id="liveDot" class="dot"></span>
     <span id="statusText" class="status-text">connecting…</span>
 
@@ -237,14 +268,30 @@
     </datalist>
 
     <div class="navgroup">
-      <button id="prevBtn" class="navbtn" title="Previous hour">◀</button>
-      <div id="hourLabel" class="hourlabel">—</div>
-      <button id="nextBtn" class="navbtn" title="Next hour">▶</button>
-      <button id="liveBtn" class="livebtn hidden">Jump to live</button>
-    </div>
-  </div>
-
-  <div class="progresswrap hidden">
+          <button id="prevBtn" class="navbtn" title="Previous hour">◀</button>
+          <div id="hourLabel" class="hourlabel">—</div>
+          <button id="nextBtn" class="navbtn" title="Next hour">▶</button>
+          <button id="liveBtn" class="livebtn hidden">Jump to live</button>
+        </div>
+      </div>
+    
+      <div id="statsBar" class="statsbar statsbar-2row">
+          <div class="statrow">
+            <span class="rowlabel">EVEN</span>
+            <span class="stat up">GREEN <b id="statEvenUp">0</b></span>
+            <span class="stat down">RED <b id="statEvenDown">0</b></span>
+            <span class="stat nodata">DRAW <b id="statEvenDraw">0</b></span>
+          </div>
+          <div class="statrow">
+                      <span class="rowlabel">ODD</span>
+                      <span class="stat up">GREEN <b id="statOddUp">0</b></span>
+                      <span class="stat down">RED <b id="statOddDown">0</b></span>
+                      <span class="stat nodata">DRAW <b id="statOddDraw">0</b></span>
+                    </div>
+                  </div>
+                </div>
+              
+                <div class="progresswrap hidden">
       <span id="progressText">—</span>
       <div class="progressbar"><i id="progressFill"></i></div>
     </div>
@@ -261,12 +308,12 @@
   </div>
 
   <section class="panel">
-    <div class="panel-head"><b>EVEN</b>&nbsp;— boxes 2, 4, 6 … 3600</div>
+    <div class="panel-head"><b>EVEN</b></div>
     <div class="grid-wrap"><div id="evenGrid" class="grid"></div></div>
   </section>
 
   <section class="panel">
-    <div class="panel-head"><b>ODD</b>&nbsp;— boxes 1, 3, 5 … 3599</div>
+    <div class="panel-head"><b>ODD</b></div>
     <div class="grid-wrap"><div id="oddGrid" class="grid"></div></div>
   </section>
 
@@ -381,22 +428,48 @@
       else { setCellClass(cell,'nodata',null); }
     }
     if(isLiveHour && arr[curSec]) markLiveCell(curSec);
-    state.lastCurSec = isLiveHour ? curSec : -1;
-    updateProgress(isLiveHour ? curSec : null);
-  }
+        state.lastCurSec = isLiveHour ? curSec : -1;
+        updateProgress(isLiveHour ? curSec : null);
+        updateStats();
+      }
 
   function updateProgress(curSec){
-    const txt=document.getElementById('progressText');
-    const fill=document.getElementById('progressFill');
-    if(curSec===null){
-      txt.textContent='historical hour · full 3,600s shown';
-      fill.style.width='100%';
-      return;
+      const txt=document.getElementById('progressText');
+      const fill=document.getElementById('progressFill');
+      if(curSec===null){
+        txt.textContent='historical hour · full 3,600s shown';
+        fill.style.width='100%';
+        return;
+      }
+      const pct=(( curSec+1)/SEC_PER_HOUR*100).toFixed(1);
+      txt.textContent=`second ${curSec+1} / 3600 · ${pct}% through the hour`;
+      fill.style.width=pct+'%';
     }
-    const pct=(( curSec+1)/SEC_PER_HOUR*100).toFixed(1);
-    txt.textContent=`second ${curSec+1} / 3600 · ${pct}% through the hour`;
-    fill.style.width=pct+'%';
-  }
+  
+    function updateStats(){
+        let evenUp=0, evenDown=0, evenDraw=0;
+        let oddUp=0, oddDown=0, oddDraw=0;
+        for(let i=0;i<SEC_PER_HOUR;i++){
+          const cell=cells[i];
+          if(!cell) continue;
+          if(cell.classList.contains('future')) continue; // not reached yet — excluded entirely
+          const isEven = ((i+1)%2===0);
+          if(cell.classList.contains('up')){
+            if(isEven) evenUp++; else oddUp++;
+          } else if(cell.classList.contains('down')){
+            if(isEven) evenDown++; else oddDown++;
+          } else {
+            // flat (data arrived, open===close) or nodata (time passed, nothing ever received) — both count as draw
+            if(isEven) evenDraw++; else oddDraw++;
+          }
+        }
+        document.getElementById('statEvenUp').textContent=evenUp;
+        document.getElementById('statEvenDown').textContent=evenDown;
+        document.getElementById('statEvenDraw').textContent=evenDraw;
+        document.getElementById('statOddUp').textContent=oddUp;
+        document.getElementById('statOddDown').textContent=oddDown;
+        document.getElementById('statOddDraw').textContent=oddDraw;
+      }
 
   // ---------- REST historical fetch ----------
   async function loadHistorical(hs, uptoSecExclusive){
@@ -473,13 +546,14 @@
     if(idx<0||idx>=SEC_PER_HOUR) return;
     arr[idx]={o,c};
     if(state.viewHourStart===hs){
-      const cell=cells[idx];
-      setCellClass(cell, colorClass(o,c), {o,c});
-      markLiveCell(idx);
-      updateProgress(idx);
-      state.lastCurSec=idx;
-    }
-  }
+          const cell=cells[idx];
+          setCellClass(cell, colorClass(o,c), {o,c});
+          markLiveCell(idx);
+          updateProgress(idx);
+          state.lastCurSec=idx;
+          updateStats();
+        }
+      }
 
   function rollToHour(newHs){
     state.liveHourStart=newHs;
@@ -560,9 +634,17 @@
     positionTooltip(e);
   }
   function positionTooltip(e){
-    tooltip.style.left=(e.clientX+14)+'px';
-    tooltip.style.top=(e.clientY+14)+'px';
-  }
+      const pad=12;
+      let x=e.clientX+14, y=e.clientY+14;
+      const rect=tooltip.getBoundingClientRect();
+      const w=rect.width||160, h=rect.height||24;
+      if(x+w+pad>window.innerWidth) x=e.clientX-w-14;
+      if(y+h+pad>window.innerHeight) y=e.clientY-h-14;
+      if(x<pad) x=pad;
+      if(y<pad) y=pad;
+      tooltip.style.left=x+'px';
+      tooltip.style.top=y+'px';
+    }
   function hideTooltip(){ tooltip.classList.add('hidden'); }
 
   function showDetail(cell){
@@ -617,38 +699,43 @@
         if(cell && cell.classList.contains('future')) setCellClass(cell,'nodata',null);
       }
       state.lastCurSec=curSec;
-      updateProgress(curSec);
-      updateNav();
-    }
-  },1000);
+            updateProgress(curSec);
+            updateStats();
+            updateNav();
+          }
+        },1000);
 
   // ---------- viewport auto-fit ----------
-    function fitGridsToViewport(){
-      const evenGrid=document.getElementById('evenGrid');
-      const oddGrid=document.getElementById('oddGrid');
-      if(!evenGrid || !oddGrid) return;
-      function apply(cols){
-        const val='repeat('+cols+', minmax(0,1fr))';
-        evenGrid.style.gridTemplateColumns=val;
-        oddGrid.style.gridTemplateColumns=val;
-      }
-      function fits(){
-        return document.documentElement.scrollHeight <= window.innerHeight + 1;
-      }
-      let lo=4, hi=300, fit=hi;
-      apply(hi);
-      if(fits()){
-        while(lo<hi){
-          const mid=Math.floor((lo+hi)/2);
-          apply(mid);
-          if(fits()) hi=mid; else lo=mid+1;
+        function fitGridsToViewport(){
+          const evenGrid=document.getElementById('evenGrid');
+          const oddGrid=document.getElementById('oddGrid');
+          if(!evenGrid || !oddGrid) return;
+          const containerWidth = evenGrid.parentElement.clientWidth || window.innerWidth;
+  
+          function apply(px){
+            const cols=Math.max(6, Math.min(400, Math.floor(containerWidth/px)));
+            const val='repeat('+cols+', minmax(0,1fr))';
+            evenGrid.style.gridTemplateColumns=val;
+            oddGrid.style.gridTemplateColumns=val;
+            document.documentElement.style.setProperty('--row-h', Math.max(3, Math.round(px))+'px');
+          }
+          function fits(){
+            return document.documentElement.scrollHeight <= window.innerHeight + 1;
+          }
+  
+          let lo=3, hi=120, best=3;
+          apply(lo);
+          if(fits()){
+            best=lo;
+            while(lo<=hi){
+              const mid=Math.floor((lo+hi)/2);
+              apply(mid);
+              if(fits()){ best=mid; lo=mid+1; } else { hi=mid-1; }
+            }
+          }
+          apply(best);
+          document.documentElement.style.setProperty('--cell-font', Math.max(6, best*0.42).toFixed(1)+'px');
         }
-        fit=lo;
-      }
-      apply(fit);
-      const cellPx=evenGrid.clientWidth/fit;
-      document.documentElement.style.setProperty('--cell-font', Math.max(4, cellPx*0.34).toFixed(1)+'px');
-    }
   
     let fitTimer=null;
     function scheduleFit(){
