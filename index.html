@@ -199,19 +199,21 @@
             height:100%;
           }
       .cell{
-            display:flex; align-items:center; justify-content:center;
-            font-size:var(--cell-font, 8px); color:rgba(255,255,255,0.92);
-            font-weight:600;
-            border-radius:0; cursor:pointer;
-            background:var(--future);
-            border:none;
-            outline:1px solid rgba(255,255,255,0.03);
-            outline-offset:-1px;
-            user-select:none;
-            overflow:hidden;
-            padding:0;
-            white-space:nowrap;
-          }
+                  display:flex; align-items:center; justify-content:center;
+                  font-size:var(--cell-font, 8px); color:rgba(255,255,255,0.92);
+                  font-weight:600;
+                  font-variant-numeric:tabular-nums;
+                  letter-spacing:-0.4px;
+                  border-radius:0; cursor:pointer;
+                  background:var(--future);
+                  border:none;
+                  outline:1px solid rgba(255,255,255,0.03);
+                  outline-offset:-1px;
+                  user-select:none;
+                  overflow:hidden;
+                  padding:0 1px;
+                  white-space:nowrap;
+                }
   .cell.future{ background:var(--future); color:rgba(255,255,255,0.22); }
   .cell.nodata{ background:var(--nodata); color:rgba(255,255,255,0.18);
     background-image:repeating-linear-gradient(135deg, rgba(255,255,255,0.03) 0 3px, transparent 3px 6px); }
@@ -731,9 +733,11 @@
                             if(cellSize>bestCell){ bestCell=cellSize; bestCols=cols; bestRows=rows; }
                           }
                           document.documentElement.style.setProperty('--grid-cols', bestCols);
-                          document.documentElement.style.setProperty('--grid-rows', bestRows);
-                          document.documentElement.style.setProperty('--cell-font', Math.max(6, bestCell*0.42).toFixed(1)+'px');
-                        }
+                                            document.documentElement.style.setProperty('--grid-rows', bestRows);
+                                            const maxDigits = String(SEC_PER_HOUR).length;
+                                            const fontFit = bestCell / (maxDigits*0.62 + 0.3);
+                                            document.documentElement.style.setProperty('--cell-font', Math.max(5, Math.min(bestCell*0.42, fontFit)).toFixed(1)+'px');
+                                          }
   
     let fitTimer=null;
     function scheduleFit(){
